@@ -1,6 +1,6 @@
 ﻿namespace WindowsFormsApplication1
 {
-    partial class Form1
+    partial class frmMain
     {
         /// <summary>
         /// Required designer variable.
@@ -28,22 +28,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.button1 = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
+            this.cmdOpen = new System.Windows.Forms.Button();
             this.txtFile = new System.Windows.Forms.TextBox();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.cmdUpdate = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // button1
+            // cmdOpen
             // 
-            this.button1.Location = new System.Drawing.Point(719, 148);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(121, 35);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Open File";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.cmdOpen.Location = new System.Drawing.Point(719, 148);
+            this.cmdOpen.Name = "cmdOpen";
+            this.cmdOpen.Size = new System.Drawing.Size(121, 35);
+            this.cmdOpen.TabIndex = 0;
+            this.cmdOpen.Text = "Open File";
+            this.cmdOpen.UseVisualStyleBackColor = true;
+            this.cmdOpen.Click += new System.EventHandler(this.cmdOpen_Click);
             // 
             // txtFile
             // 
@@ -53,10 +53,10 @@
             this.txtFile.Size = new System.Drawing.Size(476, 26);
             this.txtFile.TabIndex = 1;
             // 
-            // openFileDialog1
+            // openFileDialog
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog1_FileOk);
+            this.openFileDialog.FileName = "openFileDialog1";
+            this.openFileDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.openFileDialog_FileOk);
             // 
             // cmdUpdate
             // 
@@ -68,20 +68,20 @@
             this.cmdUpdate.UseVisualStyleBackColor = true;
             this.cmdUpdate.Click += new System.EventHandler(this.cmdUpdate_Click);
             // 
-            // Form1
+            // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1038, 443);
             this.Controls.Add(this.cmdUpdate);
             this.Controls.Add(this.txtFile);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.cmdOpen);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(1060, 498);
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(1060, 498);
-            this.Name = "Form1";
+            this.Name = "frmMain";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Volvo ME7 Checksum Updater";
@@ -92,9 +92,9 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button cmdOpen;
         private System.Windows.Forms.TextBox txtFile;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.Button cmdUpdate;
     }
 }

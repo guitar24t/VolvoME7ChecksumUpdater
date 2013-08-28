@@ -10,22 +10,22 @@ using System.Windows.Forms;
 
 namespace WindowsFormsApplication1
 {
-    public partial class Form1 : Form
+    public partial class frmMain : Form
     {
-        public Form1()
+        public frmMain()
         {
             InitializeComponent();
             this.AllowDrop = true;
-            this.DragEnter += new DragEventHandler(Form1_DragEnter);
-            this.DragDrop += new DragEventHandler(Form1_DragDrop);
+            this.DragEnter += new DragEventHandler(frmMain_DragEnter);
+            this.DragDrop += new DragEventHandler(frmMain_DragDrop);
         }
 
-        private void Form1_DragEnter(object sender, DragEventArgs e)
+        private void frmMain_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop)) e.Effect = DragDropEffects.Copy;
         }
 
-        private void Form1_DragDrop(object sender, DragEventArgs e)
+        private void frmMain_DragDrop(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             long binSize = new FileInfo(files[0]).Length/1024;
@@ -35,13 +35,14 @@ namespace WindowsFormsApplication1
                 MessageBox.Show("Incorrect File Size!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void cmdOpen_Click(object sender, EventArgs e)
         {
-            openFileDialog1.ShowDialog();
+            openFileDialog.ShowDialog();
         }
 
 
         /*******************************************************************************
+         * With modifications, based on:
          *  Routine: Checksum_Volvo_ME7
          *  Input: file_buffer = bin file buffer for checksum calculation 
          *  Output: file_buffer is directly modified
@@ -91,32 +92,38 @@ namespace WindowsFormsApplication1
                            + ((UInt32)file_buffer[buffer_index + 13] << 8)
                            + (UInt32)file_buffer[buffer_index + 12];
 
-                Console.WriteLine("checksum calc: " + checksum.ToString("X8") + " file: " + currChecksum.ToString("X8"));
-
                 if (checksum != currChecksum)
                 {
                     valid = false;
                 }
                 UInt32 complchecksum = ~checksum;
-                Console.WriteLine("checksum inv calc: " + checksum.ToString("X8") + " file: " + currChecksum.ToString("X8"));
                 if (ComplimentcurrChecksum != complchecksum)
                 {
                     valid = false;
                 }
                 if (!checkOnly)
                 {
-                    // Save the new checksum
-
-                    savebytetobinary((int)(buffer_index + 8), (byte)(checksum & 0x000000FF), filename);
-                    savebytetobinary((int)(buffer_index + 9), (byte)((checksum & 0x0000FF00) >> 8), filename);
-                    savebytetobinary((int)(buffer_index + 10), (byte)((checksum & 0x00FF0000) >> 16), filename);
-                    savebytetobinary((int)(buffer_index + 11), (byte)((checksum & 0xFF000000) >> 24), filename);
-                    // Save the complement of the new checksum
-                    checksum = ~checksum;
-                    savebytetobinary((int)(buffer_index + 12), (byte)(checksum & 0x000000FF), filename);
-                    savebytetobinary((int)(buffer_index + 13), (byte)((checksum & 0x0000FF00) >> 8), filename);
-                    savebytetobinary((int)(buffer_index + 14), (byte)((checksum & 0x00FF0000) >> 16), filename);
-                    savebytetobinary((int)(buffer_index + 15), (byte)((checksum & 0xFF000000) >> 24), filename);
+                    try
+                    {
+                        // Save the new checksum
+                        savebytetobinary((int)(buffer_index + 8), (byte)(checksum & 0x000000FF), filename);
+                        savebytetobinary((int)(buffer_index + 9), (byte)((checksum & 0x0000FF00) >> 8), filename);
+                        savebytetobinary((int)(buffer_index + 10), (byte)((checksum & 0x00FF0000) >> 16), filename);
+                        savebytetobinary((int)(buffer_index + 11), (byte)((checksum & 0xFF000000) >> 24), filename);
+                        // Save the complement of the new checksum
+                        checksum = ~checksum;
+                        savebytetobinary((int)(buffer_index + 12), (byte)(checksum & 0x000000FF), filename);
+                        savebytetobinary((int)(buffer_index + 13), (byte)((checksum & 0x0000FF00) >> 8), filename);
+                        savebytetobinary((int)(buffer_index + 14), (byte)((checksum & 0x00FF0000) >> 16), filename);
+                        savebytetobinary((int)(buffer_index + 15), (byte)((checksum & 0xFF000000) >> 24), filename);
+                        valid = true;
+                    }
+                    catch (Exception e)
+                    {
+                        valid = false;
+                        MessageBox.Show(e.Message.ToString(), this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                    }
                 }
                 buffer_index += 0x10;
             }
@@ -130,8 +137,6 @@ namespace WindowsFormsApplication1
         //
         public void savebytetobinary(int address, byte data, string filename)
         {
-            StreamWriter checksums = new StreamWriter("C:\\Checksums.txt");
-            checksums.WriteLine(address.ToString());
             FileStream fsi1 = File.OpenWrite(filename);
             BinaryWriter bw1 = new BinaryWriter(fsi1);
             fsi1.Position = address;
@@ -140,13 +145,11 @@ namespace WindowsFormsApplication1
             bw1.Close();
             fsi1.Close();
             fsi1.Dispose();
-            checksums.Flush();
-            checksums.Close();
         }
 
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        private void openFileDialog_FileOk(object sender, CancelEventArgs e)
         {
-            txtFile.Text = openFileDialog1.FileName;
+            txtFile.Text = openFileDialog.FileName;
 
         }
 
@@ -155,13 +158,21 @@ namespace WindowsFormsApplication1
             String filename = txtFile.Text;
             if (Checksum_Volvo_ME7(filename, true))
             {
-                MessageBox.Show("Checksums Verified OK!", "Volvo ME7 Checksum Updater", MessageBoxButtons.OK, MessageBoxIcon.None);
+                MessageBox.Show("Checksums Verified OK!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
-                if (MessageBox.Show("Checksums Incorrect! Update?", "Volvo ME7 Checksum Updater", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Yes)
+                if (MessageBox.Show("Checksums Incorrect! Update?", this.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Yes)
                 {
-                    Checksum_Volvo_ME7(filename, false);
+                    bool retval = Checksum_Volvo_ME7(filename, false);
+                    if (retval)
+                    {
+                        MessageBox.Show("Checksums updated successfully!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Checksums failed to update!", this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
             }
 
