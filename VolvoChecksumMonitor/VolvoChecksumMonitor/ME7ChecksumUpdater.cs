@@ -35,13 +35,18 @@ namespace VolvoChecksumMonitor
             byte[] file_buffer;
             try
             {
-                file_buffer = File.ReadAllBytes(filename);
+                long binSize = new FileInfo(filename).Length / 1024;
+                if (binSize == 512 || binSize == 1024)
+                    file_buffer = File.ReadAllBytes(filename);
+                else
+                    throw new Exception();
             }
             catch (Exception e)
             {
                 e.ToString();
                 return false;
             }
+
             bool valid = true;
             do
             {

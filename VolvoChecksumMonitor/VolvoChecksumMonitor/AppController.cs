@@ -135,51 +135,7 @@ namespace VolvoChecksumMonitor
             else
                 return false;
         }
-        /*
-         // Test method for only updating newly added files
-        private bool updateChecksums()
-        {
-            if (Directory.Exists(updateDirectory))
-            {
-                string[] files = Directory.GetFiles(updateDirectory);
-                if (oldFiles == null)
-                {
-                    foreach (string file in files)
-                    {
-                        try
-                        {
-                            ME7ChecksumUpdater.Checksum_Volvo_ME7(file, false);
-                        }
-                        catch (Exception e)
-                        {
 
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (string file in files)
-                    {
-                        if (Array.IndexOf(oldFiles, file) == -1)
-                        {
-                            try
-                            {
-                                ME7ChecksumUpdater.Checksum_Volvo_ME7(file, false);
-                            }
-                            catch (Exception e)
-                            {
-
-                            }
-                        }
-                    }
-                }
-                oldFiles = files;
-                return true;
-            }
-            else
-                return false;
-        }
-        */
         void ShowSettings(object sender, EventArgs e)
         {
             frmShowSettings();
