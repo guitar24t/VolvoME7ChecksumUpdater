@@ -35,8 +35,9 @@ namespace VolvoChecksumMonitor
             byte[] file_buffer;
             try
             {
+                string[] extCheck = filename.Split('.');
                 long binSize = new FileInfo(filename).Length / 1024;
-                if (binSize == 512 || binSize == 1024)
+                if ((binSize == 512 || binSize == 1024) && extCheck[extCheck.Length - 1].ToLower() == "bin")
                     file_buffer = File.ReadAllBytes(filename);
                 else
                     throw new Exception();
